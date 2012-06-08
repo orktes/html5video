@@ -5,7 +5,7 @@
   var techOrder = ["html", "flash"];
   var tech = {};
 
-  var idIncr = 0;
+  // EventEmitter starts
 
   var EventEmitter = function () {
     this.listeners = {};
@@ -53,6 +53,12 @@
       }
     }
   };
+
+  // EventEmitter ends
+
+  // Flash tech start
+
+  var idIncr = 0;
 
   var FlashTech = function (player) {
     var self = this;
@@ -112,6 +118,9 @@
 
   tech['flash'] = FlashTech;
 
+  // Flash tech ends
+
+  // Player interface starts
   var Player = function (element, options) {
     this.element = element;
     this.options = options;
@@ -132,6 +141,10 @@
       return this.tech[key].apply(this.tech, args);
     }
   });
+
+  // Player interface ends
+
+  // JQUERY stuff starts
 
   function initVideoPlayer(options) {
     var $this = $(this);
@@ -162,4 +175,7 @@
       }
     }
   };
+
+  // JQUERY stuff ends
+
 })(jQuery, window);
