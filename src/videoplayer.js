@@ -190,7 +190,11 @@
   FlashTech.prototype = new EventEmitter(); // Inherit event emitter
 
   FlashTech.canPlayType = function (type) {
-    return type === "video/mp4";
+    if ($.flash && $.flash.version && $.flash.version.major >= 10) {
+      return type === "video/mp4";
+    } else {
+      return false;
+    }
   };
 
   FlashTech.prototype.ready = function (callback) {
@@ -283,5 +287,4 @@
   };
 
   // JQUERY stuff ends
-
 })(jQuery, window);
