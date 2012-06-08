@@ -7,6 +7,7 @@
 <body>
 
 <h1>#example1 - init with data attributes</h1>
+
 <div id="example1"
      data-autoplay="true"
      data-type="video/mp4"
@@ -16,11 +17,19 @@
 </div>
 
 <h1>#example2 - init with options object</h1>
+
 <div id="example2"></div>
 
+<h1>#example3 - init with options object (without autoplay)</h1>
+
+<div id="example3"></div>
+<a href="#" id="example3-play">Play</a>
+
 <h1>.video - init with class</h1>
+
 <div class="video"></div>
-<br />
+<br/>
+
 <div class="video"></div>
 
 <script>
@@ -33,6 +42,20 @@
     url: "https://secure.applifier.com/impact/aw_trailer.mp4",
     width: 400,
     height: 226
+  });
+
+  $('#example3').videoplayer({
+    type: 'video/mp4',
+    url: "https://secure.applifier.com/impact/aw_trailer.mp4",
+    width: 400,
+    height: 226
+  });
+
+  $('#example3-play').click(function (e) {
+    e.preventDefault();
+    $('#example3').videoplayer("ready", function () {
+      $('#example3').videoplayer("play");
+    });
   });
 
   $('.video').videoplayer({
