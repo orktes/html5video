@@ -130,7 +130,7 @@
     this.video.load();
     this.video.pause();
     this.emit('stop');
-    self.playing = false;
+    this.playing = false;
   };
 
   $.each(funcs, function (indx, key) {
