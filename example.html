@@ -1,0 +1,49 @@
+<html>
+<head>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="http://jquery.thewikies.com/swfobject/jquery.swfobject.1-1-1.min.js"></script>
+  <script type="text/javascript" src="src/videoplayer.js"></script>
+</head>
+<body>
+
+<h1>#example1 - init with data attributes</h1>
+<div id="example1"
+     data-autoplay="true"
+     data-type="video/mp4"
+     data-url="https://secure.applifier.com/impact/aw_trailer.mp4"
+     data-width="800"
+     data-height="452">
+</div>
+
+<h1>#example2 - init with options object</h1>
+<div id="example2"></div>
+
+<h1>.video - init with class</h1>
+<div class="video"></div>
+<br />
+<div class="video"></div>
+
+<script>
+
+  $('#example1').videoplayer();
+
+  $('#example2').videoplayer({
+    autoplay: true,
+    type: 'video/mp4',
+    url: "https://secure.applifier.com/impact/aw_trailer.mp4",
+    width: 400,
+    height: 226
+  });
+
+  $('.video').videoplayer({
+    autoplay: true,
+    type: 'video/mp4',
+    url: "https://secure.applifier.com/impact/aw_trailer.mp4",
+    width: 400,
+    height: 226
+  });
+
+
+</script>
+</body>
+</html>
