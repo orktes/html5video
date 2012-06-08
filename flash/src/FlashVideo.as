@@ -46,6 +46,7 @@ package
 		private var _netStreamInitialized:Boolean = false;
 		private var _volume:Number = 1;
 		private var _playTimer:Timer;
+		private var _ended:Boolean = false;
 		
 		public function FlashVideo()
 		{
@@ -86,7 +87,7 @@ package
 			sendEvent(READY, null);
 		}
 		
-		private function stage_onResize() : void
+		private function stage_onResize(e:Event) : void
 		{
 			resizeVideo();
 		}
@@ -210,7 +211,7 @@ package
 					break;
 				case "NetStream.Play.Stop":
 					if (!_stopped)
-						onStopped();
+						onEnded();
 					stop();
 					break;
 			}
@@ -222,7 +223,14 @@ package
 		}
 		
 		private function onStopped () : void {
-			sendEvent(STOP, null);
+			if (!_ended)
+				sendEvent(STOP, null);
+			_playTimer.stop();
+		}
+		
+		private function onEnded () : void {
+			sendEvent(END, null);
+			_ended = true;
 			_playTimer.stop();
 		}
 		

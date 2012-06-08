@@ -11,7 +11,7 @@
 <div id="example1"
      data-autoplay="true"
      data-type="video/mp4"
-     data-url="https://secure.applifier.com/impact/aw_trailer.mp4"
+     data-src="https://secure.applifier.com/impact/aw_trailer.mp4"
      data-width="800"
      data-height="452">
 </div>
@@ -23,7 +23,10 @@
 <h1>#example3 - init with options object (without autoplay)</h1>
 
 <div id="example3"></div>
-<a href="#" class="example3-control" data-action="play">Play</a> - <a href="#" class="example3-control" data-action="pause">Pause</a> - <a href="#" class="example3-control" data-action="stop">Stop</a>
+<a href="#" class="example3-control" data-action="play">Play</a> - <a href="#" class="example3-control"
+                                                                      data-action="pause">Pause</a> - <a href="#"
+                                                                                                         class="example3-control"
+                                                                                                         data-action="stop">Stop</a>
 
 <h1>.video - init with class</h1>
 
@@ -39,14 +42,14 @@
   $('#example2').videoplayer({
     autoplay: true,
     type: 'video/mp4',
-    url: "https://secure.applifier.com/impact/aw_trailer.mp4",
+    src: "https://secure.applifier.com/impact/aw_trailer.mp4",
     width: 400,
     height: 226
   });
 
   $('#example3').videoplayer({
     type: 'video/mp4',
-    url: "https://secure.applifier.com/impact/aw_trailer.mp4",
+    src: "https://secure.applifier.com/impact/aw_trailer.mp4",
     width: 400,
     height: 226
   });
@@ -62,11 +65,37 @@
   $('.video').videoplayer({
     autoplay: true,
     type: 'video/mp4',
-    url: "https://secure.applifier.com/impact/aw_trailer.mp4",
+    src: "https://secure.applifier.com/impact/aw_trailer.mp4",
     width: 400,
     height: 226
   });
 
+  // Event tracking
+  $('.video, #example1, #example2, #example3').each(function (indx, item) {
+    var item = $(item);
+    var info = $('<div></div>');
+    item.append(info);
+
+    item.videoplayer('on', 'start', function () {
+      info.append("start");
+    });
+
+    item.videoplayer('on', 'end', function () {
+      info.append("end");
+    });
+
+    item.videoplayer('on', 'pause', function () {
+      info.append("pause");
+    });
+
+    item.videoplayer('on', 'stop', function () {
+      info.append("stop");
+    });
+
+    item.videoplayer('on', 'progress', function () {
+      info.append(".");
+    });
+  });
 
 </script>
 </body>

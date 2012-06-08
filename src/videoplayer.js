@@ -3,7 +3,9 @@
   var flashPath = "flash/bin-debug/FlashVideo.swf";
   var funcs = ["play", "pause", "stop", "currentTime", "duration", "setVolume", "volume", "ready"];
   var techOrder = ["html", "flash"];
+  var videoTag = document.createElement('video');
   var tech = {};
+
 
   // EventEmitter starts
 
@@ -56,6 +58,99 @@
 
   // EventEmitter ends
 
+  // HTML5 tech starts
+  var HTML5Tech = function (player) {
+    var self = this;
+
+    EventEmitter.call(this);
+
+    this.player = player;
+
+    var element = $('<video width="' + this.player.options.width + '" height="' + this.player.options.height + '"></video>');
+
+    if (this.player.options.autoplay) {
+      element.attr('autoplay', 'autoplay');
+    }
+
+    element.append($('<source src="' + this.player.options.src + '" type=" ' + this.player.options.type + '"></source>'));
+    $(this.player.element).append(element);
+
+    this.video = element[0];
+
+    self.playing = false;
+
+    element.bind('pause', function () {
+      self.playing = false;
+      self.emit('pause');
+    });
+
+    element.bind('playing', function () {
+      self.playing = true;
+      self.emit('start');
+    });
+
+    element.bind('ended', function () {
+      self.playing = false;
+      self.emit('end');
+    });
+
+    element.bind('timeupdate', function () {
+      if (self.playing)
+        self.emit('progress');
+    });
+  };
+
+  HTML5Tech.canPlayType = function (type) {
+    return (videoTag.canPlayType && videoTag.canPlayType(type) !== "");
+  };
+
+  HTML5Tech.prototype = new EventEmitter();
+
+  HTML5Tech.prototype.ready = function (callback) {
+    callback.call(this);
+  };
+
+  HTML5Tech.prototype.currentTime = function () {
+    return this.video.currentTime;
+  };
+
+  HTML5Tech.prototype.duration = function () {
+    return this.video.duration;
+  };
+
+  HTML5Tech.prototype.setVolume = function (volume) {
+    return this.video.volume = volume;
+  };
+
+  HTML5Tech.prototype.volume = function () {
+    return this.video.volume;
+  };
+
+  HTML5Tech.prototype.stop = function () {
+    this.video.load();
+    this.video.pause();
+    this.emit('stop');
+    self.playing = false;
+  };
+
+  $.each(funcs, function (indx, key) {
+    if (key == "ready"
+      || key == "currentTime"
+      || key == "duration"
+      || key == "volume"
+      || key == "setVolume"
+      || key == "stop") { // ready is not generic
+      return;
+    }
+    HTML5Tech.prototype[key] = function () {
+      var args = Array.prototype.slice.call(arguments);
+      return this.video[key].apply(this.video, args);
+    }
+  });
+
+  tech['html'] = HTML5Tech;
+  // HTML5 tech ends
+
   // Flash tech start
 
   var idIncr = 0;
@@ -82,7 +177,7 @@
       swf: flashPath,
       flashvars: {
         jsApiCallback: "window." + jsApiCallback,
-        fileUrl: this.player.options.url,
+        fileUrl: this.player.options.src,
         autoplay: !!(this.player.options.autoplay)
       }
     });
@@ -125,17 +220,28 @@
     this.element = element;
     this.options = options;
 
-    for (var t in tech) {
-      if (tech[t]
-        && tech[t].canPlayType
-        && tech[t].canPlayType(this.options.type)) {
-        this.tech = new tech[t](this);
-        break;
+    if (!this.options.tech) {
+      for (var t in tech) {
+        if (tech[t]
+          && tech[t].canPlayType
+          && tech[t].canPlayType(this.options.type)) {
+          this.tech = new tech[t](this);
+          break;
+        }
       }
+    } else {
+      this.tech = new tech[this.options.tech](this);
     }
   };
 
   $.each(funcs, function (indx, key) {
+    Player.prototype[key] = function () {
+      var args = Array.prototype.slice.call(arguments);
+      return this.tech[key].apply(this.tech, args);
+    }
+  });
+
+  $.each(["on", "once", "removeEventListener", "emit"], function (indx, key) {
     Player.prototype[key] = function () {
       var args = Array.prototype.slice.call(arguments);
       return this.tech[key].apply(this.tech, args);
