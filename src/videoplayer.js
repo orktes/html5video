@@ -220,8 +220,8 @@
   // Flash tech ends
 
   // Player interface starts
-  var Player = function (element, options) {
-    this.element = element;
+  var Player = function (options) {
+    this.element = options.element;
     this.options = options;
 
     if (!this.options.tech) {
@@ -259,7 +259,8 @@
   function initVideoPlayer(options) {
     var $this = $(this);
     options = options || $this.data();
-    return new Player(this, options);
+    options.element = this;
+    return new Player(options);
   }
 
   $.fn.videoplayer = function (options) {
