@@ -77,6 +77,8 @@ package
 				ExternalInterface.addCallback("v_currentTime", currentTime);
 				ExternalInterface.addCallback("v_duration", duration);
 				ExternalInterface.addCallback("v_isReady", isReady);
+				ExternalInterface.addCallback("v_setVolume", setVolume);
+				ExternalInterface.addCallback("v_volume", volume);
 			} 
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
